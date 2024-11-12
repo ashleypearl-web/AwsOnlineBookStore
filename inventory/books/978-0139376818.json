@@ -1,0 +1,6 @@
+{
+    "ISBN13": { "S": "978-0139376818" },
+    "title": { "S": "The Unix Programming Environment" },
+    "author": { "S": "Kerninghan & Pike" },
+    "price": { "N": "9599" }
+}

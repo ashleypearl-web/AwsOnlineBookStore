@@ -1,0 +1,11 @@
+[Unit]
+Description=Bookshop Inventory Service
+
+[Service]
+Type=simple
+ExecStart=python3 inventory.py
+WorkingDirectory=/home/ubuntu
+User=ubuntu
+
+[Install]
+WantedBy=multi-user.target

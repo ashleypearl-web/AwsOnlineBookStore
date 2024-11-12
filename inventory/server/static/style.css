@@ -1,0 +1,79 @@
+
+table.header {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.welcome {
+    font-weight: 500;
+    font-size: 16pt;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+table.books {
+    border: 5px solid lightblue;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th.colhead {
+    text-align: left;
+}
+
+tr.colhead {
+    background: orange;
+}
+
+tr.books:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+tr.books:nth-child(even) {
+    background-color: #ffffff;
+}
+
+td.bookstext {
+    padding: 5px;
+}
+
+td.booksprice {
+    text-align: right;
+    padding: 5px;
+}
+
+a.buylink {
+    padding: 5px;
+    color: white;
+    background: blue;
+    border-radius: 5px;
+    padding: 2px;
+    text-decoration: none;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.footer {
+    text-align: center;
+    font-size: 10pt;
+    font-family: sans-serif;
+}
+
+p.confheader {
+    text-align: left;
+    font-size: 30pt;
+    font-weight: 700;
+    font-family: sans-serif;
+    text-decoration: underline;
+}
+
+p.conftablehdr {
+    text-align: left;
+    font-size: 20pt;
+    font-weight: 700;
+    font-family: sans-serif;
+}
+
+table.conf, td.conf, th.conf {
+    border: 1px solid;
+}

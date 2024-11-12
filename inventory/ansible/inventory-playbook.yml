@@ -1,0 +1,105 @@
+---
+- name: Deploy Bookshop Inventory
+  hosts: inventory
+  gather_facts: true
+  remote_user: ubuntu
+
+  tasks:
+  - name: Print Remote OS
+    debug:
+      msg: "family is {{ ansible_facts['os_family'] }}"
+
+  ##################################################
+  # Task 1 - Install Pre-Req Packages
+  ##################################################
+
+  - name: Install Packages
+    apt:
+      pkg:
+      - unzip
+      - python3-boto3
+      - python3-flask
+      - nginx
+    become: true
+    when: (ansible_facts["os_family"] == 'Debian')
+
+  ##################################################
+  # Task 2 - Install Inventory Server
+  ##################################################
+
+  - name: Install Server Files
+    unarchive:
+      src: "inventory.zip"
+      dest: "/home/ubuntu"
+      remote_src: no
+
+  ##################################################
+  # Task 3 - Install System Service
+  ##################################################
+
+  - name: Install inventory_s Service
+    copy:
+      src: inventory_s.service
+      dest: /etc/systemd/system/inventory_s.service
+      remote_src: yes
+    become: true
+
+  ##################################################
+  # Task 4 - Start Inventory Server
+  ##################################################
+
+  - name: Make sure inventory server is running
+    systemd_service:
+      name: inventory_s
+      state: started
+      enabled: true
+    become: true
+
+  ##################################################
+  # Task 5 - Download CloudWatch Agent
+  ##################################################
+  
+  - name: Download CloudWatch Agent
+    get_url:
+      url: https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/arm64/latest/amazon-cloudwatch-agent.deb
+      dest: /home/ubuntu/agent.deb
+
+  ##################################################
+  # Task 6 - Install CloudWatch Agent
+  ##################################################
+  
+  - name: Install CloudWatch Agent
+    apt:
+      deb: /home/ubuntu/agent.deb
+    become: true
+
+  ##################################################
+  # Task 7 - Copy CW Configuration File
+  ##################################################
+  
+  - name: Copy over cloudwatch configuration
+    copy:
+      src: inventory-cloudwatch.json
+      dest: /tmp/inventory-cloudwatch.json
+      remote_src: no
+
+  ##################################################
+  # Task 8 - Fetch CW Configuration
+  ##################################################
+
+  - name: Fetch CW Configuration
+    shell:
+      cmd: sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/tmp/inventory-cloudwatch.json
+    become: true
+
+  ##################################################
+  # Task 9 - Enable CloudWatch Agent
+  ##################################################
+
+  - name: Make sure cloudwatch agent is running
+    systemd_service:
+      name: amazon-cloudwatch-agent
+      state: started
+      enabled: true
+    become: true
+
